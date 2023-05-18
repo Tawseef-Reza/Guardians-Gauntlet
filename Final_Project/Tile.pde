@@ -6,22 +6,26 @@ class Tile{
 
   public Tile(int type){
     this.type = type;
-    if(type == 0){//GROUND
-      canPlaceTower = true;
-      enemyWalkable = false;
-    }
-    if(type == 1){//OBSTRUCTION
+    
+    switch (type) {
+     case 0: // GROUND
+       canPlaceTower = true;
+       enemyWalkable = false;
+       break;
+     case 1: //OBSTRUCTION
       canPlaceTower = false;
       enemyWalkable = false;
+       break;
+     case 2: //PATH
+       canPlaceTower = false;
+       enemyWalkable = true;     
+       break;
     }
-    if(type == 2){//PATH
-      canPlaceTower = false;
-      enemyWalkable = true;
-    }
-    
-    
-    
   }
+    
+    
+    
+  
   public int getType(){
     return type;
   }
