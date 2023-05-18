@@ -1,9 +1,9 @@
 
-int boxPosZ;
-int boxPosX;
+int boxPosZ = 0;
+int boxPosX = 0;
 boolean inBuildMode;
 
-float isoThetaX = -radians(0);//-atan(sin(radians(45))) + radians(5);
+float isoThetaX = -atan(sin(radians(45))) + radians(5);
 float isoThetaY = radians(45);
 Level currentLevel;
 
@@ -12,6 +12,7 @@ void setup() {
     smooth();
     ortho();
     //noFill();
+    //noStroke();
     currentLevel = new Level(1);
 
 }
@@ -64,10 +65,22 @@ void draw() {
             pushMatrix();
             rotateX(isoThetaX);
             rotateY(isoThetaY);
-            translate(boxPosX - ((float)currentLevel.tiles.length / 2)*50+25,-37, boxPosZ -((float)currentLevel.tiles[0].length / 2)*50+25);
-            fill(255,0,0);
+            translate((boxPosX + (float)currentLevel.tiles.length / 2)*50-25,-37, (boxPosZ -(float)currentLevel.tiles[0].length / 2)*50+25);;
+            //fill(255,0,0);
+            if(currentLevel.tiles[-boxPosX][boxPosZ].getCanPlaceTower()){
+              stroke(0,255,0);
+            }
+            else{
+              stroke(255,0,0);
+            }
+            noFill();
             box(50);
+            stroke(0,0,0);
             popMatrix();
+            
+            textSize(100);
+            fill(0,0,0);
+            text(boxPosX + ", " + boxPosZ,width / 2,height / 2);
           }
 
               
@@ -81,10 +94,10 @@ void draw() {
                else if(keyCode == DOWN && isoThetaX < 0){
                 isoThetaX += radians(1);
                }
-               else if(keyCode == LEFT && isoThetaX < 0){
+               else if(keyCode == LEFT && isoThetaX < 0 && isoThetaY < radians(90)){
                 isoThetaY += radians(1);              
               }
-               else if(keyCode == RIGHT && isoThetaX < 0){
+               else if(keyCode == RIGHT && isoThetaX < 0 && isoThetaY > 0){
                 isoThetaY -= radians(1);              
               }              
              }
@@ -105,18 +118,18 @@ void mousePressed(){
 void keyPressed(){
           if(key == CODED){
             if(inBuildMode){
-              if(keyCode == UP){
+              if(keyCode == UP && boxPosX < 0){
               
-                boxPosX += 50;
+                boxPosX += 1;
               }
-              else if(keyCode == DOWN){
-                boxPosX -= 50;
+              else if(keyCode == DOWN && boxPosX > -(currentLevel.tiles.length - 1)){
+                boxPosX -= 1;
               }
-              else if(keyCode == RIGHT){
-                boxPosZ += 50;
+              else if(keyCode == RIGHT && boxPosZ < currentLevel.tiles[0].length - 1){
+                boxPosZ += 1;
               }
-              else if(keyCode == LEFT){
-                boxPosZ -= 50;
+              else if(keyCode == LEFT && boxPosZ > 0){
+                boxPosZ -= 1;
               }             
             }
             
