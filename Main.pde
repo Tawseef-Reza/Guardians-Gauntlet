@@ -30,13 +30,13 @@ void displayLevel(){
   rotateX(PI/2);
   for(int i = 0; i < currentLevel.tiles.length; i++){
     for(int j = 0; j < currentLevel.tiles[0].length; j++){
-      if(currentLevel.tiles[i][j].type == 0){
-        fill(0,255,0);
+      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 0){
+        fill(0,100,0);
       }
-      if(currentLevel.tiles[i][j].type == 1){
+      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 1){
         fill(255,0,0);
       }
-      if(currentLevel.tiles[i][j].type == 2){
+      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 2){
         fill(212,200,130);
       }
       rect((i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);

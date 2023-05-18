@@ -11,7 +11,7 @@ class Tile{
       enemyWalkable = false;
     }
     if(type == 1){//OBSTRUCTION
-      canPlaceTower = true;
+      canPlaceTower = false;
       enemyWalkable = false;
     }
     if(type == 2){//PATH
