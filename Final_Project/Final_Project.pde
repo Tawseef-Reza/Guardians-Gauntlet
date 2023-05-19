@@ -1,4 +1,6 @@
-
+PImage grass;
+PImage path;
+PImage sky;
 int boxPosZ = 0;
 int boxPosX = 0;
 boolean inBuildMode;
@@ -14,10 +16,16 @@ void setup() {
     //noFill();
     //noStroke();
     currentLevel = new Level(1);
+    grass = loadImage("grass.png");
+    path = loadImage("path.png");
+    sky = loadImage("sky.png");
+    sky.resize(1600,900);
+    //image(sky,0,0);
 
 }
 void displayLevel(){
   background(47,193,222);
+  //background(sky);
   translate(width / 2, height / 2);
   pushMatrix();
             
@@ -31,15 +39,18 @@ void displayLevel(){
   for(int i = 0; i < currentLevel.tiles.length; i++){
     for(int j = 0; j < currentLevel.tiles[0].length; j++){
       if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 0){
-        fill(0,100,0);
+        
+        image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
       }
       if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 1){
         fill(255,0,0);
+        rect((i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
       }
       if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 2){
-        fill(212,200,130);
+        //fill(212,200,130);
+        image(path,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
       }
-      rect((i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
+      
     }
     
   }

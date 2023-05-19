@@ -4,7 +4,7 @@ class Level{
   // add your levels here, level2 is currently same as level1
   private final int[][][] levels = new int[][][] {
     {
-                            {1, 0, 0, 2, 0, 0, 0, 0},
+                            {0, 0, 0, 2, 0, 0, 0, 0},
                             {0, 0, 0, 2, 0, 0, 0, 0},
                             {0, 0, 0, 2, 0, 0, 0, 0},
                             {0, 0, 0, 2, 0, 0, 0, 0},
