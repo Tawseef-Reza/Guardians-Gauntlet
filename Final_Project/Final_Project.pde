@@ -4,6 +4,7 @@ PImage sky;
 int boxPosZ = 0;
 int boxPosX = 0;
 boolean inBuildMode;
+PShape tree;
 
 float isoThetaX = -atan(sin(radians(45))) + radians(5);
 float isoThetaY = radians(45);
@@ -18,9 +19,10 @@ void setup() {
     currentLevel = new Level(1);
     grass = loadImage("grass.png");
     path = loadImage("path.png");
-    sky = loadImage("sky.png");
-    sky.resize(1600,900);
+    //sky = loadImage("sky.png");
+    //sky.resize(1600,900);
     //image(sky,0,0);
+    tree = loadShape("tree01.obj");
 
 }
 void displayLevel(){
@@ -43,8 +45,15 @@ void displayLevel(){
         image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
       }
       if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 1){
-        fill(255,0,0);
-        rect((i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
+        //fill(255,0,0);
+        pushMatrix();
+        translate((i - (float)currentLevel.tiles.length / 2)*50+25,(j - (float)currentLevel.tiles[0].length / 2)*50+25,0);
+        image(grass,-25,-25,50,50);
+        rotateX(radians(90));
+        //translate(0,200,0);
+
+        shape(tree,0,0);
+        popMatrix();
       }
       if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 2){
         //fill(212,200,130);
