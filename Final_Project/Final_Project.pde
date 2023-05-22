@@ -77,7 +77,7 @@ void draw() {
     else{
       fill(255,0,0);
     }
-    rect(width/2-100,height/2-50,100,50);
+    
             
             
           if(inBuildMode){  
@@ -96,11 +96,12 @@ void draw() {
             noFill();
             box(50);
             stroke(0,0,0);
+            rect(width/2-100,height/2-50,100,50);
             popMatrix();
             
-            textSize(100);
-            fill(0,0,0);
-            text(boxPosX + ", " + boxPosZ,width / 2,height / 2);
+            //textSize(100);
+            //fill(0,0,0);
+            //text(boxPosX + ", " + boxPosZ,width / 2,height / 2);
           }
 
               
