@@ -11,7 +11,7 @@ float isoThetaY = radians(45);
 Level currentLevel;
 
 void setup() {
-    size(1600, 900, P3D);
+    fullScreen(P3D);
     smooth();
     ortho();
     //noFill();
