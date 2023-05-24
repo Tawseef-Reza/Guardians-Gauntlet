@@ -6,12 +6,20 @@ int boxPosX = 0;
 boolean inBuildMode;
 PShape tree;
 
+int zoomAmount = 0;
+
 float isoThetaX = -atan(sin(radians(45))) + radians(5);
 float isoThetaY = radians(45);
 Level currentLevel;
 
+int shiftX;
+int shiftY;
+int temp1;
+int temp2;
+
 void setup() {
-    fullScreen(P3D);
+    size(1600, 900, P3D);
+    surface.setResizable(false);
     smooth();
     ortho();
     //noFill();
@@ -28,16 +36,18 @@ void setup() {
 void displayLevel(){
   background(47,193,222);
   //background(sky);
-  translate(width / 2, height / 2);
-  pushMatrix();
-            
+
+  translate(width / 2, height / 2, zoomAmount);
+  pushMatrix();            
   //translate(width / gridSize - 100, height / gridSize - 100);
   rotateX(isoThetaX);
   rotateY(isoThetaY);
+  translate(shiftX,0,shiftY);
   fill(0,255,0);
-  box(currentLevel.tiles.length*50,25,currentLevel.tiles[0].length*50);
+  //box(currentLevel.tiles.length*50,25,currentLevel.tiles[0].length*50);
   translate(0, -12.6, 0);
   rotateX(PI/2);
+  //pushMatrix();
   for(int i = 0; i < currentLevel.tiles.length; i++){
     for(int j = 0; j < currentLevel.tiles[0].length; j++){
       if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 0){
@@ -65,6 +75,16 @@ void displayLevel(){
   }
   
   popMatrix();
+  pushMatrix();
+  translate(-width/2,-height/2,-zoomAmount);
+  if(inBuildMode)
+    fill(0,255,0);
+  else
+    fill(255,0,0);
+  rect(0,0,100,50);
+  popMatrix();
+  
+  
   
 
 }
@@ -85,7 +105,7 @@ void draw() {
             pushMatrix();
             rotateX(isoThetaX);
             rotateY(isoThetaY);
-            translate((boxPosX + (float)currentLevel.tiles.length / 2)*50-25,-37, (boxPosZ -(float)currentLevel.tiles[0].length / 2)*50+25);;
+            translate((boxPosX + (float)currentLevel.tiles.length / 2)*50-25 + shiftX,-37, (boxPosZ -(float)currentLevel.tiles[0].length / 2)*50+25 + shiftY);;
             //fill(255,0,0);
             if(currentLevel.tiles[-boxPosX][boxPosZ].getCanPlaceTower()){
               stroke(0,255,0);
@@ -96,12 +116,8 @@ void draw() {
             noFill();
             box(50);
             stroke(0,0,0);
-            rect(width/2-100,height/2-50,100,50);
-            popMatrix();
             
-            //textSize(100);
-            //fill(0,0,0);
-            //text(boxPosX + ", " + boxPosZ,width / 2,height / 2);
+            popMatrix();
           }
 
               
@@ -110,30 +126,38 @@ void draw() {
             if(keyPressed == true){
               if(key == CODED && inBuildMode == false){
                if(keyCode == UP  && isoThetaX > -radians(90)){
-                isoThetaX -= radians(1);
+                //isoThetaX -= radians(1);
+                shiftY += 5;
                }
                else if(keyCode == DOWN && isoThetaX < 0){
-                isoThetaX += radians(1);
+                //isoThetaX += radians(1);
+                shiftY -= 5;
                }
                else if(keyCode == LEFT && isoThetaX < 0 && isoThetaY < radians(90)){
-                isoThetaY += radians(1);              
+                //isoThetaY += radians(1);  
+                shiftX += 5;
               }
                else if(keyCode == RIGHT && isoThetaX < 0 && isoThetaY > 0){
-                isoThetaY -= radians(1);              
+                //isoThetaY -= radians(1);
+                shiftX -= 5;
               }              
              }
             }
+              
+            
                   
        
 }
 
 void mousePressed(){
-  if(mouseX > width-100 && mouseX < width && mouseY > height-100 && mouseY < height){
+  if(mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 50){
     inBuildMode = !inBuildMode;
   }
+  //zoomAmount += 100;
   
 
 }
+
 
 
 void keyPressed(){
@@ -153,8 +177,18 @@ void keyPressed(){
                 boxPosZ -= 1;
               }             
             }
+
             
             
           }
+          else if (key == '1'){
+              zoomAmount += 100;
+          
+          }
+          else if (key == '2'){
+              zoomAmount -= 100;
+          
+          }
+          
 
 }
