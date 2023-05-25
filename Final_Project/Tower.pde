@@ -1,4 +1,4 @@
-class Tower {
+/*class Tower {
   PVector position; // Position of the tower
   float range; // Attack range of the tower
   float damage; // Damage inflicted by the tower
@@ -46,4 +46,4 @@ class Tower {
 
     return closestEnemy;
   }
-}
+}*/

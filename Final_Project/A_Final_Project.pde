@@ -18,6 +18,7 @@ int temp1;
 int temp2;
 
 void setup() {
+    
     size(1600, 900, P3D);
     surface.setResizable(false);
     smooth();
@@ -31,10 +32,11 @@ void setup() {
     //sky.resize(1600,900);
     //image(sky,0,0);
     tree = loadShape("tree01.obj");
+    spawnEnemy();
 
 }
 void displayLevel(){
-  background(47,193,222);
+  background(77,70,170);
   //background(sky);
 
   translate(width / 2, height / 2, zoomAmount);
@@ -44,8 +46,11 @@ void displayLevel(){
   rotateY(isoThetaY);
   translate(shiftX,0,shiftY);
   fill(0,255,0);
-  //box(currentLevel.tiles.length*50,25,currentLevel.tiles[0].length*50);
-  translate(0, -12.6, 0);
+  pushMatrix();
+  fill(75,50,0);
+  translate(0,4001,0);
+  box(currentLevel.tiles.length*50,8000,currentLevel.tiles[0].length*50);
+  popMatrix();
   rotateX(PI/2);
   //pushMatrix();
   for(int i = 0; i < currentLevel.tiles.length; i++){
@@ -60,7 +65,6 @@ void displayLevel(){
         translate((i - (float)currentLevel.tiles.length / 2)*50+25,(j - (float)currentLevel.tiles[0].length / 2)*50+25,0);
         image(grass,-25,-25,50,50);
         rotateX(radians(90));
-        //translate(0,200,0);
 
         shape(tree,0,0);
         popMatrix();
@@ -69,10 +73,21 @@ void displayLevel(){
         //fill(212,200,130);
         image(path,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
       }
-      
+      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 3){
+        fill(255,255,255);
+        rect((i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50); 
+        
+      }
+      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 4){
+        fill(0,255,255);
+        rect((i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50); 
+      }
+        
     }
     
   }
+  displayEnemy();
+  showAxes();
   
   popMatrix();
   pushMatrix();
@@ -82,6 +97,9 @@ void displayLevel(){
   else
     fill(255,0,0);
   rect(0,0,100,50);
+  textSize(100);
+  fill(255,255,255);
+  text(enemies.get(enemies.size() - 1).tick,0,100);
   popMatrix();
   
   
@@ -105,7 +123,7 @@ void draw() {
             pushMatrix();
             rotateX(isoThetaX);
             rotateY(isoThetaY);
-            translate((boxPosX + (float)currentLevel.tiles.length / 2)*50-25 + shiftX,-37, (boxPosZ -(float)currentLevel.tiles[0].length / 2)*50+25 + shiftY);;
+            translate((boxPosX + (float)currentLevel.tiles.length / 2)*50-25 + shiftX,-25, (boxPosZ -(float)currentLevel.tiles[0].length / 2)*50+25 + shiftY);;
             //fill(255,0,0);
             if(currentLevel.tiles[-boxPosX][boxPosZ].getCanPlaceTower()){
               stroke(0,255,0);
@@ -143,7 +161,7 @@ void draw() {
               }              
              }
             }
-              
+            
             
                   
        
@@ -191,4 +209,29 @@ void keyPressed(){
           }
           
 
+}
+void displayEnemy(){
+        pushMatrix();
+        translate(-(((enemies.get(enemies.size() - 1)).interPos.x - (float)currentLevel.tiles.length / 2)*50+25),((enemies.get(enemies.size() - 1)).interPos.y - (float)currentLevel.tiles[0].length / 2)*50+25,0);
+        //image(grass,-25,-25,50,50);
+        rotateX(radians(90));
+        //translate(0,200,0);
+
+        shape(tree,0,0);
+        popMatrix(); 
+        enemies.get(enemies.size() - 1).update();
+
+}
+void spawnEnemy(){
+        new Enemy(0,0,100,1,1);
+ 
+}
+
+void showAxes(){
+  stroke(255,0,0);
+  line(0,0,0,100,0,0);
+  stroke(0,255,0);
+  line(0,0,0,0,100,0);
+    stroke(0,0,255);
+  line(0,0,0,0,0,100);
 }

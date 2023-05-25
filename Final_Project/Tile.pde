@@ -12,13 +12,21 @@ class Tile{
        canPlaceTower = true;
        enemyWalkable = false;
        break;
-     case 1: //OBSTRUCTION
+     case 1: //OBSTRUCTION (Tree)
       canPlaceTower = false;
       enemyWalkable = false;
        break;
      case 2: //PATH
        canPlaceTower = false;
        enemyWalkable = true;     
+       break;
+     case 3: //FINISH LINE
+       canPlaceTower = false;
+       enemyWalkable = true;
+       break;
+     case 4: //SPAWNER
+       canPlaceTower = false;
+       enemyWalkable = true;
        break;
     }
   }

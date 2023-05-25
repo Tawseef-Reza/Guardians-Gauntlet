@@ -5,26 +5,74 @@ List<Enemy> enemies = new ArrayList<Enemy>(); // List to hold the enemies
 
 class Enemy {
   PVector position; // Position of the enemy
+  PVector interPos;
   float health; // Health of the enemy
   float speed; // Movement speed of the enemy
+  Level currentLevel;
+  PVector targetPos;
+  int direction;
+  int tick = 0;
 
-  Enemy(float x, float y, float z, float health, float speed) {
-    position = new PVector(x, y, z);
+  Enemy(float x, float y, float health, float speed, int currentLevelNum) {
+    position = new PVector(x, y);
     this.health = health;
     this.speed = speed;
 
     enemies.add(this); // Add the enemy to the list
+    currentLevel = new Level(currentLevelNum);
+    for(int i = 0; i < currentLevel.tiles.length; i++){
+      for(int j = 0; j < currentLevel.tiles[0].length; j++){
+        if(currentLevel.tiles[i][j].type == 3)
+          targetPos = new PVector(i,j);
+        else if(currentLevel.tiles[i][j].type == 4)
+          position = new PVector(i,j);
+      }
+    }
+    interPos = new PVector(position.x,position.y);
+ 
   }
 
   void update() {
     // Move the enemy towards the target (e.g., the player's base)
-    move();
+    if (tick % 50*speed == 0)
+      move();
+    else if(direction == 0) //down
+      interPos = new PVector(interPos.x + 0.02, interPos.y);
+    else if(direction == 1) //up
+      interPos = new PVector(interPos.x - 0.02, interPos.y);
+    else if(direction == 2) //left
+      interPos = new PVector(interPos.x, interPos.y - 0.02);
+    else if(direction == 3) //right
+      interPos = new PVector(interPos.x, interPos.y +0.02);
+    tick++;
+    
   }
 
   void move() {
+    if(direction == 0) //down
+      position = new PVector(position.x + 1, position.y);
+    if(direction == 1) //up
+      position = new PVector(position.x - 1, position.y);
+    if(direction == 2) //left
+      position = new PVector(position.x, position.y - 1);
+    if(direction == 3) //right
+      position = new PVector(position.x, position.y +1);
+    interPos = new PVector(position.x,position.y);
+      
     // Move the enemy along the path or towards the target
     // not sure how to make the enmy move along the path
-    position.x += speed;
+    if(currentLevel.tiles[(int)position.x + 1][(int)position.y].type == 2 ){ //path down
+      direction = 0;
+    }
+    else if(currentLevel.tiles[(int)position.x][(int)position.y - 1].type == 2){ //path left
+      direction = 2;
+    }
+    else if(currentLevel.tiles[(int)position.x][(int)position.y + 1].type == 2){ //path right
+      direction = 3;
+    }
+    
+    //position.x += speed;
+    
 
     // You can also add additional logic to change direction or follow a path
 
@@ -38,7 +86,7 @@ class Enemy {
     // not sure how to implement this logic
 
     // Return true if the enemy has reached the target, otherwise false
-    return position.x >= TARGET_X_POSITION; // Replace TARGET_X_POSITION with your desired threshold value
+    return position.x >= targetPos.x; // Replace TARGET_X_POSITION with your desired threshold value
   }
 
   void takeDamage(float damage) {
