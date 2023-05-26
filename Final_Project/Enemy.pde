@@ -7,6 +7,7 @@ class Enemy {
   PVector position; // Position of the enemy
   PVector interPos;
   float health; // Health of the enemy
+  float maxHealth;
   float speed; // Movement speed of the enemy
   Level currentLevel;
   PVector targetPos;
@@ -16,6 +17,7 @@ class Enemy {
   Enemy(float x, float y, float health, float speed, int currentLevelNum) {
     position = new PVector(x, y);
     this.health = health;
+    maxHealth = health;
     this.speed = speed;
 
     enemies.add(this); // Add the enemy to the list
@@ -49,6 +51,7 @@ class Enemy {
   }
 
   void move() {
+    takeDamage(2);
     if(direction == 0) //down
       position = new PVector(position.x + 1, position.y);
     if(direction == 1) //up
@@ -61,14 +64,17 @@ class Enemy {
       
     // Move the enemy along the path or towards the target
     // not sure how to make the enmy move along the path
-    if(currentLevel.tiles[(int)position.x + 1][(int)position.y].type == 2 ){ //path down
+    if(currentLevel.tiles[(int)position.x + 1][(int)position.y].type == 2 && direction != 1 && position.x < targetPos.x - 1){ //path down
       direction = 0;
     }
-    else if(currentLevel.tiles[(int)position.x][(int)position.y - 1].type == 2){ //path left
+    else if(currentLevel.tiles[(int)position.x][(int)position.y - 1].type == 2 && direction != 3){ //path left
       direction = 2;
     }
-    else if(currentLevel.tiles[(int)position.x][(int)position.y + 1].type == 2){ //path right
+    else if(currentLevel.tiles[(int)position.x][(int)position.y + 1].type == 2 && direction != 2){ //path right
       direction = 3;
+    }
+    else if(currentLevel.tiles[(int)position.x - 1][(int)position.y].type == 2 && direction != 0){ //path right
+      direction = 1;
     }
     
     //position.x += speed;
@@ -79,6 +85,7 @@ class Enemy {
     // Check if the enemy has reached the target (e.g., the player's base)
     if (reachedTarget()) {
       defeat();
+      baseHealth -= 1;
     }
   }
 
@@ -107,5 +114,22 @@ class Enemy {
     boolean removed = enemies.remove(this);
 
     return removed; // Return true if the enemy was successfully removed, otherwise false
+  }
+  
+  void healthBar(){
+    if(health != maxHealth){
+    pushMatrix();
+    fill(200,200,200);
+    rect(0,100,50,5);
+    if( health / maxHealth > 0.5)
+      fill(0,255,0);
+    else if(health / maxHealth > 0.25)
+      fill(255,165,0);
+    else
+      fill(255,0,0);
+    translate(0,0,-1);
+    rect(0,100,health/maxHealth * 50,5);
+    popMatrix();
+    }
   }
 }

@@ -3,8 +3,10 @@ PImage path;
 PImage sky;
 int boxPosZ = 0;
 int boxPosX = 0;
+int baseHealth = 100;
 boolean inBuildMode;
 PShape tree;
+PShape goblin;
 
 int zoomAmount = 0;
 
@@ -32,7 +34,8 @@ void setup() {
     //sky.resize(1600,900);
     //image(sky,0,0);
     tree = loadShape("tree01.obj");
-    spawnEnemy();
+    goblin = loadShape("Goblin.obj");
+    //spawnEnemy();
 
 }
 void displayLevel(){
@@ -86,7 +89,10 @@ void displayLevel(){
     }
     
   }
-  displayEnemy();
+  if(frameCount % 120 == 0){
+    spawnEnemy();
+  }
+  displayEnemies();
   showAxes();
   
   popMatrix();
@@ -99,7 +105,7 @@ void displayLevel(){
   rect(0,0,100,50);
   textSize(100);
   fill(255,255,255);
-  text(enemies.get(enemies.size() - 1).tick,0,100);
+  text("Base Health: " + baseHealth,0,120);
   popMatrix();
   
   
@@ -210,16 +216,20 @@ void keyPressed(){
           
 
 }
-void displayEnemy(){
-        pushMatrix();
-        translate(-(((enemies.get(enemies.size() - 1)).interPos.x - (float)currentLevel.tiles.length / 2)*50+25),((enemies.get(enemies.size() - 1)).interPos.y - (float)currentLevel.tiles[0].length / 2)*50+25,0);
-        //image(grass,-25,-25,50,50);
-        rotateX(radians(90));
-        //translate(0,200,0);
+void displayEnemies(){
+        
+        for(int i = 0; i < enemies.size(); i++){
+          pushMatrix();
+          translate(-(((enemies.get(i)).interPos.x - (float)currentLevel.tiles.length / 2)*50+25),((enemies.get(i)).interPos.y - (float)currentLevel.tiles[0].length / 2)*50+25,0);
+          //image(grass,-25,-25,50,50);
+          rotateX(radians(90));
+          //translate(0,200,0);
 
-        shape(tree,0,0);
-        popMatrix(); 
-        enemies.get(enemies.size() - 1).update();
+          shape(goblin,0,0);
+          enemies.get(i).healthBar();
+          popMatrix(); 
+          enemies.get(i).update();
+        }
 
 }
 void spawnEnemy(){
@@ -234,4 +244,5 @@ void showAxes(){
   line(0,0,0,0,100,0);
     stroke(0,0,255);
   line(0,0,0,0,0,100);
+  noStroke();
 }
