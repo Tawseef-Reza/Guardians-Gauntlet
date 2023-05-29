@@ -3,8 +3,8 @@ import java.util.List;
 
 boolean temp = true;
 
-int spawnEveryXFrames = 50;
-
+int spawnEveryXFrames = 20;
+int totalMoney = 2000;
 PImage grass;
 PImage path;
 PImage spawner;
@@ -12,7 +12,7 @@ int boxPosZ = 0;
 int boxPosX = 0;
 int baseHealth = 100;
 boolean inBuildMode;
-
+int[] price = new int[] {100, 50};
 int[] radii = new int[] {10, 3}; // damage radius for each tower
 int damage = 5;
 float fireRate = 5;
@@ -45,18 +45,18 @@ void setup() {
 
     size(1600, 900, P3D);
     surface.setResizable(false);
-    
+   
     smooth();
     ortho();
     //noFill();
     //noStroke();
     currentLevel = new Level(levelNum);
-    
+   
     for (int i = 0; i < currentLevel.tiles.length; i++) {
       for (int j = 0; j < currentLevel.tiles[0].length; j++) {
-        if (currentLevel.tiles[i][j].type == 5) 
+        if (currentLevel.tiles[i][j].type == 5)
           spawnTower(i, j, "TurretTower");
-        else if (currentLevel.tiles[i][j].type == 6) 
+        else if (currentLevel.tiles[i][j].type == 6)
           spawnTower(i, j, "SlowTower");
       }
     }
@@ -64,10 +64,10 @@ void setup() {
     path = loadImage("textures/path.png");
     tree = loadShape("models/tree/tree01.obj");
     spawner = loadImage("textures/spawner.jpg");
-    
+   
     goblin = loadShape("models/goblin/Goblin.obj");
     robot = loadShape("models/robot/robot.obj");
-    
+   
     turret = loadShape("models/turret/turret.obj");
     sword = loadShape("models/sword/sword.obj");
     slow = loadShape("models/slow/slow.obj");
@@ -103,7 +103,7 @@ void displayLevel(){
   for(int i = 0; i < currentLevel.tiles.length; i++){
     for(int j = 0; j < currentLevel.tiles[0].length; j++){
       if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 0){
-        
+       
         image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
       }
       if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 1){
@@ -111,7 +111,7 @@ void displayLevel(){
         pushMatrix();
         translate((i - (float)currentLevel.tiles.length / 2)*50+25,(j - (float)currentLevel.tiles[0].length / 2)*50+25,0);
         image(grass,-25,-25,50,50);
-        
+       
         rotateX(radians(90));
 
         shape(tree,0,0);
@@ -130,20 +130,20 @@ void displayLevel(){
 
       }
       if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 5){
-        
+       
         image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
       }
       if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 6){
-        
+       
         image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
       }
-      
-        
+     
+       
     }
-    
+   
   }
   updateEnemies();
-  
+ 
   displayEnemies();
   showAxes();
   updateTowers();
@@ -159,14 +159,15 @@ void displayLevel(){
   textSize(100);
   fill(255,255,255);
   text("Base Health: " + baseHealth,0,120);
+  text("Money Left: $" + totalMoney, width-850, 120);
   popMatrix();
-  
-  
-  
+ 
+ 
+ 
 
 }
 
-void displayBuild() {   
+void displayBuild() {  
   if(inBuildMode){  
     translate(0, 0);
     pushMatrix();
@@ -179,22 +180,22 @@ void displayBuild() {
     pushMatrix();
       if (currentLevel.tiles[-boxPosX][boxPosZ].getCanPlaceTower())
         fill(0,255,0);
-      else 
+      else
         fill(255,0,0);
       translate(0, 24, 0);
       rotateX(radians(90));
       circle(0,0, 100 + 50 * radii[towerModelsIndex]);
     popMatrix();
-    
+   
     noFill();
     stroke(0,0,0);
     rotateZ(radians(180));
     yrot = yrot++ == 360 ? 0 : yrot;
     rotateY(radians(yrot));
-    
+   
     translate(0, -25, 0);
     shape(towerModels.get(towerModelsIndex), 0, 0);
-    
+   
     popMatrix();
   }
           /*
@@ -204,7 +205,7 @@ void displayBuild() {
     rotateX(isoThetaX);
     rotateY(isoThetaY);
     translate(-((-boxPosX - (float)currentLevel.tiles.length / 2)*50+25-shiftX),-25, (boxPosZ -(float)currentLevel.tiles[0].length / 2)*50+25 + shiftY);
-    
+   
     //fill(255,0,0);
     if(currentLevel.tiles[-boxPosX][boxPosZ].getCanPlaceTower()){
       stroke(0,255,0);
@@ -212,14 +213,14 @@ void displayBuild() {
     else{
       stroke(255,0,0);
     }
-    
-    
-    
-    
+   
+   
+   
+   
     stroke(0,0,0);
-    
+   
     popMatrix();
-    
+   
   }
   */
 
@@ -243,20 +244,20 @@ void checkKey() {
         shiftX -= 5;          
      }
     }
-    
+   
 }
 void draw() {
-  
+ 
     displayLevel();
     displayBuild();
     checkKey();
-    
+   
 
-              
-            
+             
+           
 
-            
-            
+           
+           
        
 }
 
@@ -265,7 +266,7 @@ void mousePressed(){
     inBuildMode = !inBuildMode;
   }
   //zoomAmount += 100;
-  
+ 
 
 }
 
@@ -282,7 +283,7 @@ void keyPressed(){
           if(inBuildMode){
             if(key == CODED){
               if(keyCode == UP && boxPosX < 0){
-              
+             
                 boxPosX += 1;
               }
               else if(keyCode == DOWN && boxPosX > -(currentLevel.tiles.length - 1)){
@@ -293,31 +294,41 @@ void keyPressed(){
               }
               else if(keyCode == LEFT && boxPosZ > 0){
                 boxPosZ -= 1;
-              } 
-              else if (keyCode == SHIFT && currentLevel.tiles[-boxPosX][boxPosZ].getCanPlaceTower()) {
-                if (towerModels.get(towerModelsIndex) == turret) {
-                   spawnTower(-boxPosX, boxPosZ, "TurretTower");
-                   currentLevel.tiles[-boxPosX][boxPosZ] = new Tile(5);
-
-                }
-                else if (towerModels.get(towerModelsIndex) == slow) {
-                   spawnTower(-boxPosX, boxPosZ, "SlowTower");
-                   currentLevel.tiles[-boxPosX][boxPosZ] = new Tile(6);
-
-                }
               }
-              
-            }  
+              else if (keyCode == SHIFT && currentLevel.tiles[-boxPosX][boxPosZ].getCanPlaceTower()) {
+                if (totalMoney - price[towerModelsIndex] < 0) {
+                   
+                }
+                else {
+                  totalMoney -= price[towerModelsIndex];
+                  if (towerModels.get(towerModelsIndex) == turret) {
+                     spawnTower(-boxPosX, boxPosZ, "TurretTower");
+                     currentLevel.tiles[-boxPosX][boxPosZ] = new Tile(5);
+ 
+                  }
+                  else if (towerModels.get(towerModelsIndex) == slow) {
+                     spawnTower(-boxPosX, boxPosZ, "SlowTower");
+                     currentLevel.tiles[-boxPosX][boxPosZ] = new Tile(6);
+ 
+                  }
+                }
+             
+              }  
+            }
             else {
               if (key == 'c') {
-                towerModelsIndex = ++towerModelsIndex == towerModels.size() ? 0 : towerModelsIndex;
+                println("ran");
+                if (++towerModelsIndex == towerModels.size()) 
+                  towerModelsIndex = 0;
+                
               }
             }
           }
-          
-          
+         
+         
 
 }
+
 
 void displayTowers() {
   for (int i = 0; i < towers.size(); i++) {
@@ -326,7 +337,7 @@ void displayTowers() {
     /*
     println("position on tile is " + towers.get(i).tilePosition);
     println("position on world is: x " + -(((towers.get(i)).tilePosition.x - (float)currentLevel.tiles.length / 2)*50+25) + " y " + ((towers.get(i)).tilePosition.y - (float)currentLevel.tiles[0].length / 2)*50+25);
-    
+   
     println("position of box is [" + -boxPosX + " " + boxPosZ + "]");
     println("position on world is: x " + -((-boxPosX - (float)currentLevel.tiles.length / 2)*50+25) + " y " + (boxPosZ -(float)currentLevel.tiles[0].length / 2)*50+25);
     */
@@ -363,7 +374,7 @@ void updateTowers() {
 
 
 void displayEnemies(){
-        
+       
         for(int i = 0; i < enemies.size(); i++){
           pushMatrix();
           translate(-(((enemies.get(i)).interPos.x - (float)currentLevel.tiles.length / 2)*50+25),((enemies.get(i)).interPos.y - (float)currentLevel.tiles[0].length / 2)*50+25,0);
@@ -372,7 +383,7 @@ void displayEnemies(){
             case 0:
               rotateZ(radians(270));
               break;
-            case 1: 
+            case 1:
               rotateZ(radians(90));
               break;
             case 2:
@@ -384,21 +395,21 @@ void displayEnemies(){
           }
           //rotateZ(radians(yrot));
           rotateX(radians(90));
-          
-          
-          
+         
+         
+         
           //translate(0,200,0);
-          
+         
           shape(robot,0,0);
           enemies.get(i).healthBar();
-          popMatrix(); 
+          popMatrix();
         }
 
 }
 
 void updateEnemies() {
   if (inBuildMode) {
-   return; 
+   return;
   }
   if(frameCount % spawnEveryXFrames == 0){
     if (temp) {
