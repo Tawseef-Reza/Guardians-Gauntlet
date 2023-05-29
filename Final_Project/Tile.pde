@@ -28,6 +28,14 @@ class Tile{
        canPlaceTower = false;
        enemyWalkable = true;
        break;
+     case 5: //TURRETTOWER
+       canPlaceTower = false;
+       enemyWalkable = false;
+       break;
+     case 6: //SLOWTOWER
+       canPlaceTower = false;
+       enemyWalkable = false;
+       break;
     }
   }
     
