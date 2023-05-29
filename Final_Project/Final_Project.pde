@@ -88,7 +88,7 @@ void displayLevel(){
   pushMatrix();
   fill(75,50,0);
   translate(0,4001,0);
-  //box(currentLevel.tiles.length*50,8000,currentLevel.tiles[0].length*50);
+  box(currentLevel.tiles.length*50,8000,currentLevel.tiles[0].length*50);
   popMatrix();
   pushMatrix();
   translate(0,-50,0);
