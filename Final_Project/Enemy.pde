@@ -119,6 +119,7 @@ class Enemy {
     // Check if the enemy has been defeated
     if (health <= 0) {
       defeat();
+      totalMoney += 10;
     }
   }
 

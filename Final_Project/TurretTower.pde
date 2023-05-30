@@ -63,4 +63,8 @@ class TurretTower extends Tower {
     target = closestEnemy;
   }
   
+  void delete(){
+    towers.remove(this);
+    totalMoney += price[0] / 2;
+  }
 }

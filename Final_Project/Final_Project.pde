@@ -13,7 +13,7 @@ int boxPosX = 0;
 int baseHealth = 100;
 boolean inBuildMode;
 int[] price = new int[] {100, 50};
-int[] radii = new int[] {10, 3}; // damage radius for each tower
+int[] radii = new int[] {4, 3}; // damage radius for each tower
 int damage = 5;
 float fireRate = 5;
 int slowIntensity = 20;
@@ -295,7 +295,8 @@ void keyPressed(){
               else if(keyCode == LEFT && boxPosZ > 0){
                 boxPosZ -= 1;
               }
-              else if (keyCode == SHIFT && currentLevel.tiles[-boxPosX][boxPosZ].getCanPlaceTower()) {
+              else if (keyCode == SHIFT) { //PLACE TOWER
+               if( currentLevel.tiles[-boxPosX][boxPosZ].getCanPlaceTower()){
                 if (totalMoney - price[towerModelsIndex] < 0) {
                    
                 }
@@ -312,11 +313,24 @@ void keyPressed(){
  
                   }
                 }
+               }
+               
              
               }  
+              else if (keyCode == ALT) { //DELETE TOWER
+                int towerIndex = -1;
+                for(int i = 0; i < towers.size(); i++){
+                  if(towers.get(i).tilePosition.x == -boxPosX && towers.get(i).tilePosition.y == boxPosZ)
+                    towerIndex = i;
+                }
+                if(towerIndex >= 0){
+                  towers.get(towerIndex).delete();
+                  currentLevel.tiles[-boxPosX][boxPosZ] = new Tile(0);
+                }
+              }
             }
             else {
-              if (key == 'c') {
+              if (key == 'c') { // SWAP BETWEEN TOWERS
                 println("ran");
                 if (++towerModelsIndex == towerModels.size()) 
                   towerModelsIndex = 0;

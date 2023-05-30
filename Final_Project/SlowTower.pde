@@ -52,4 +52,9 @@ class SlowTower extends Tower {
     }
     targets = allTargets;
   }
+  
+  void delete(){
+    towers.remove(this);
+    totalMoney += price[1] / 2;
+  }
 }

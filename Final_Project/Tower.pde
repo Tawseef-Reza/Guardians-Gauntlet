@@ -14,4 +14,5 @@ abstract class Tower {
 
   
   abstract void displayParticles();
+  abstract void delete();
 }
