@@ -11,6 +11,7 @@ class SlowTower extends Tower {
       tilePosition =  new PVector(tilePosX, tilePosY);
       this.range = range;
       this.slowIntensity = slowIntensity;
+      this.sellPrice = price[1]/2;
   }
   void update() {
     editTargets();

@@ -4,13 +4,11 @@ import java.util.List;
 List<Enemy> enemies = new ArrayList<Enemy>(); // List to hold the enemies
 
 class Enemy {
-  float rot = 0;
   int slowAmt = 0;
   PVector position; // Position of the enemy
   PVector interPos;
   float health; // Health of the enemy
   float maxHealth;
-  float slowSpeed;
   float speedSaved;
   float speed; // Movement speed of the enemy
   Level currentLevel;

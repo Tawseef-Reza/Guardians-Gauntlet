@@ -8,6 +8,7 @@ class TurretTower extends Tower {
     this.range = range;
     this.damage = damage;
     this.fireRate = fireRate;
+    this.sellPrice = price[0]/2;
     lastFiredTime = millis(); // Initialize lastFiredTime with the current time
   }
   

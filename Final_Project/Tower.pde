@@ -10,9 +10,13 @@ abstract class Tower {
   float range; // Attack range of the tower
   float lastFiredTime; // Time when the tower last fired
   PVector tilePosition;
+  int sellPrice;
   abstract void update();
 
   
   abstract void displayParticles();
-  abstract void delete();
+  void delete() {
+    towers.remove(this);
+    totalMoney += sellPrice; 
+  }
 }
