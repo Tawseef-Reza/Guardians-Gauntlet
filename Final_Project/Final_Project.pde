@@ -35,7 +35,7 @@ int zoomAmount = 0;
 float isoThetaX = -atan(sin(radians(45))) + radians(5);
 float isoThetaY = radians(45);
 Level currentLevel;
-int levelNum = 1;
+int levelNum = 0;
 
 int shiftX;
 int shiftY;
@@ -51,15 +51,18 @@ void setup() {
     //noFill();
     //noStroke();
     currentLevel = new Level(levelNum);
-   
+    /*
     for (int i = 0; i < currentLevel.tiles.length; i++) {
       for (int j = 0; j < currentLevel.tiles[0].length; j++) {
+        
         if (currentLevel.tiles[i][j].type == 5)
           spawnTower(i, j, "TurretTower");
         else if (currentLevel.tiles[i][j].type == 6)
           spawnTower(i, j, "SlowTower");
+          
       }
     }
+    */
     grass = loadImage("textures/grass.png");
     path = loadImage("textures/path.png");
     tree = loadShape("models/tree/tree01.obj");
@@ -75,6 +78,30 @@ void setup() {
     towerModelsIndex = 0;
 
 }
+
+void draw() {
+  
+    if (currentLevel.tiles != null) {
+      displayLevel();
+      displayBuild();
+      checkKey();
+    }
+    else {
+      menuScreen();
+    }
+}
+
+void menuScreen() {
+  background(77,70,170);
+  textAlign(CENTER, CENTER);
+  textSize(100);
+  fill(0);
+  text("Guardian's Gauntlet");
+  int rectSize = 200;
+  rect(width/2 - 200, height/2 - 200, 200, 200);
+  
+}
+
 void displayLevel(){
   lights();
   background(77,70,170);
@@ -100,71 +127,81 @@ void displayLevel(){
   noFill();
   popMatrix();
   rotateX(PI/2);
-  for(int i = 0; i < currentLevel.tiles.length; i++){
-    for(int j = 0; j < currentLevel.tiles[0].length; j++){
-      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 0){
-       
-        image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
-      }
-      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 1){
-        //fill(255,0,0);
-        pushMatrix();
-        translate((i - (float)currentLevel.tiles.length / 2)*50+25,(j - (float)currentLevel.tiles[0].length / 2)*50+25,0);
-        image(grass,-25,-25,50,50);
-       
-        rotateX(radians(90));
-
-        shape(tree,0,0);
-        popMatrix();
-      }
-      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 2){
-        //fill(212,200,130);
-        image(path,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
-      }
-      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 3){
-        image(spawner,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
-
-      }
-      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 4){
-        image(spawner,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
-
-      }
-      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 5){
-       
-        image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
-      }
-      if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 6){
-       
-        image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
-      }
-     
-       
-    }
+  
+    populateLevel();
+    updateEnemies();
    
-  }
-  updateEnemies();
- 
-  displayEnemies();
-  showAxes();
-  updateTowers();
-  displayTowers();
-  popMatrix();
-  pushMatrix();
-  translate(-width/2,-height/2,-zoomAmount);
-  if(inBuildMode)
-    fill(0,255,0);
-  else
-    fill(255,0,0);
-  rect(0,0,100,50);
-  textSize(100);
-  fill(255,255,255);
-  text("Base Health: " + baseHealth,0,120);
-  text("Money Left: $" + totalMoney, width-850, 120);
-  popMatrix();
+    displayEnemies();
+    showAxes();
+    updateTowers();
+    displayTowers();
+    popMatrix();
+    pushMatrix();
+    translate(-width/2,-height/2,-zoomAmount);
+    if(inBuildMode)
+      fill(0,255,0);
+    else
+      fill(255,0,0);
+    rect(0,0,100,50);
+    textSize(100);
+    fill(255,255,255);
+    text("Base Health: " + baseHealth,0,120);
+    text("Money Left: $" + totalMoney, width-850, 120);
+    popMatrix();
+  
+  
+    
+  
+
  
  
  
 
+}
+
+void populateLevel() {
+  for(int i = 0; i < currentLevel.tiles.length; i++){
+      for(int j = 0; j < currentLevel.tiles[0].length; j++){
+        if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 0){
+         
+          image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
+        }
+        if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 1){
+          //fill(255,0,0);
+          pushMatrix();
+          translate((i - (float)currentLevel.tiles.length / 2)*50+25,(j - (float)currentLevel.tiles[0].length / 2)*50+25,0);
+          image(grass,-25,-25,50,50);
+         
+          rotateX(radians(90));
+  
+          shape(tree,0,0);
+          popMatrix();
+        }
+        if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 2){
+          //fill(212,200,130);
+          image(path,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
+        }
+        if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 3){
+          image(spawner,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
+  
+        }
+        if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 4){
+          image(spawner,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
+  
+        }
+        if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 5){
+         
+          image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
+        }
+        if(currentLevel.tiles[currentLevel.tiles.length - i - 1][j].type == 6){
+         
+          image(grass,(i - (float)currentLevel.tiles.length / 2)*50,(j - (float)currentLevel.tiles[0].length / 2)*50,50,50);
+        }
+       
+         
+      }
+   
+    } 
 }
 
 void displayBuild() {  
@@ -246,24 +283,16 @@ void checkKey() {
     }
    
 }
-void draw() {
- 
-    displayLevel();
-    displayBuild();
-    checkKey();
-   
 
-             
-           
-
-           
-           
-       
-}
 
 void mousePressed(){
-  if(mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 50){
-    inBuildMode = !inBuildMode;
+  if (currentLevel.tiles != null) {
+    if(mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 50){
+      inBuildMode = !inBuildMode;
+    }
+  }
+  else {
+    
   }
   //zoomAmount += 100;
  
