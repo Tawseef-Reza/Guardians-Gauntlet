@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 boolean temp = true;
+boolean gameStarted = false;
 
 int spawnEveryXFrames = 20;
 int totalMoney = 2000;
@@ -246,20 +247,24 @@ void checkKey() {
     }
    
 }
+
+
 void draw() {
- 
-    displayLevel();
-    displayBuild();
-    checkKey();
-   
+  if (!gameStarted) {
+    if (keyCode == 32) { // Check if spacebar is pressed
+      gameStarted = true;
+    } else {
+      drawMenu();
+      return;
+    }
+  }
 
-             
-           
-
-           
-           
-       
+  // Rest of your code for the game...
+  displayLevel();
+  displayBuild();
+  checkKey();
 }
+
 
 void mousePressed(){
   if(mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 50){
@@ -457,4 +462,25 @@ void showAxes(){
     stroke(0,0,255);
   line(0,0,0,0,0,100);
   noStroke();
+}
+
+void drawMenu() {
+  // background
+  
+  //title
+  textAlign(CENTER, CENTER);
+  textSize(125);
+  fill(255);
+  text("Guardians of the Gauntlet", width/2, height/2 - 100);
+  
+  //menu buttons
+  textSize(24);
+  fill(255);
+  rectMode(CENTER);
+  
+  // Start Game
+  fill(100);
+  rect(width/2, height/1.5, 250, 100);
+  fill(255);
+  text("Press Space to Begin", width/2, height/1.5);
 }
