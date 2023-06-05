@@ -2,6 +2,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 boolean temp = true;
+boolean levelFinished = true; // true for starting screen, which counts as a level
+final int totalNumLevels = 9;
+int currentLevelChoosing = 2; // this leads to level 1
+int rowChoosing = 0;
+int columnChoosing = 0;
 
 int spawnEveryXFrames = 20;
 int totalMoney = 2000;
@@ -86,20 +91,88 @@ void draw() {
       displayBuild();
       checkKey();
     }
-    else {
-      menuScreen();
+    else { // levels not part of game, menu and levelselect
+      switch (levelNum) {
+        case 0:
+          menuScreen();
+          break;
+        case 1:
+          levelSelect();
+          break;
+      }
     }
 }
 
 void menuScreen() {
-  background(77,70,170);
+  // background
+  background(#9656DB);
+  //title
   textAlign(CENTER, CENTER);
-  textSize(100);
-  fill(0);
-  text("Guardian's Gauntlet");
-  int rectSize = 200;
-  rect(width/2 - 200, height/2 - 200, 200, 200);
+  textSize(125);
+  fill(255);
+  text("Guardians of the Gauntlet", width/2, height/2 - 100);
   
+  //menu buttons
+  textSize(24);
+  fill(255);
+  rectMode(CENTER);
+  
+  // Start Game
+  fill(100);
+  rect(width/2, height/1.5, 250, 100);
+  fill(255);
+  text("Press Space to Begin", width/2, height/1.5);
+  textAlign(LEFT, LEFT);
+  rectMode(CORNER);
+  noFill();
+}
+
+void levelSelect() {
+  background(0,0,0);
+  //make sure rows * columns gets u totalNumLevels
+  int rows = 3;
+  int columns = 3;
+  int rectSizeW = width/(2 * rows + 1);
+  int rectSizeH = height/(2 * columns + 1);
+
+  
+  textAlign(CENTER, CENTER);
+  textSize(60);
+  color[] colors = new color[] {
+        color(255, 0, 0),       // Red
+        color(255, 165, 0),     // Orange
+        color(255, 255, 0),     // Yellow
+        color(0, 255, 0),       // Green
+        color(0, 0, 255),       // Blue
+        color(75, 0, 130),      // Indigo
+        color(238, 130, 238),   // Violet
+        color(255, 105, 180),   // Pink
+        color(0, 255, 255)      // Cyan
+      };
+  for (int i = 0; i < columns; i++) {
+    for (int j = 0; j < rows; j++) {
+      int pos = j * columns + i;
+      //text(pos, (((2 * i + 1) * rectSizeW) + ((2 * i + 1) * rectSizeW + rectSizeW))/2, (((2 * j + 1) * rectSizeH) + ((2 * j + 1) * rectSizeH + rectSizeH))/2);
+      fill(colors[pos]);
+      // Calculate RGB values based on position
+      if (currentLevelChoosing-2 == pos) {
+        stroke(255,255,255);
+        strokeWeight(10);
+      }
+      rect((2 * i + 1) * rectSizeW, (2 * j + 1) * rectSizeH, rectSizeW, rectSizeH, 4);
+      if (pos + 1 == 9) 
+        fill(colors[0]);
+      else 
+        fill(colors[pos+1]);
+      
+      text(pos, (((2 * i + 1) * rectSizeW) + ((2 * i + 1) * rectSizeW + rectSizeW))/2, (((2 * j + 1) * rectSizeH) + ((2 * j + 1) * rectSizeH + rectSizeH))/2);
+      noStroke();
+      strokeWeight(1);
+    }
+  }
+  textAlign(LEFT, LEFT);
+      
+  levelFinished = true;
 }
 
 void displayLevel(){
@@ -148,14 +221,6 @@ void displayLevel(){
     text("Base Health: " + baseHealth,0,120);
     text("Money Left: $" + totalMoney, width-850, 120);
     popMatrix();
-  
-  
-    
-  
-
- 
- 
- 
 
 }
 
@@ -235,31 +300,7 @@ void displayBuild() {
    
     popMatrix();
   }
-          /*
-  if(inBuildMode){  
-    translate(0, 0);
-    pushMatrix();
-    rotateX(isoThetaX);
-    rotateY(isoThetaY);
-    translate(-((-boxPosX - (float)currentLevel.tiles.length / 2)*50+25-shiftX),-25, (boxPosZ -(float)currentLevel.tiles[0].length / 2)*50+25 + shiftY);
-   
-    //fill(255,0,0);
-    if(currentLevel.tiles[-boxPosX][boxPosZ].getCanPlaceTower()){
-      stroke(0,255,0);
-    }
-    else{
-      stroke(255,0,0);
-    }
-   
-   
-   
-   
-    stroke(0,0,0);
-   
-    popMatrix();
-   
-  }
-  */
+  
 
 }
 void checkKey() {
@@ -285,15 +326,16 @@ void checkKey() {
 }
 
 
+
+
+
 void mousePressed(){
   if (currentLevel.tiles != null) {
     if(mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 50){
       inBuildMode = !inBuildMode;
     }
   }
-  else {
-    
-  }
+  
   //zoomAmount += 100;
  
 
@@ -302,6 +344,7 @@ void mousePressed(){
 
 
 void keyPressed(){
+  if (currentLevel.tiles != null) {
         if (key == 'z'){
           zoomAmount += 100;          
         }
@@ -367,7 +410,25 @@ void keyPressed(){
               }
             }
           }
-         
+  }
+  else {
+
+    if (key == ENTER && levelFinished) {
+      if (levelNum == 1) { // select level
+        levelNum = currentLevelChoosing;
+        currentLevel = new Level(levelNum);
+        levelFinished = false;
+      }
+      else {
+        currentLevel = new Level(++levelNum);
+        levelFinished = false;
+      }
+    }
+    else if (key == TAB && levelNum == 1) {
+      currentLevelChoosing = ++currentLevelChoosing == totalNumLevels+2 ? 2 : currentLevelChoosing; // total num is 9, so push by 2 since current level choosing pushed by 2
+    }
+    
+  }
          
 
 }
