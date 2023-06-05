@@ -121,7 +121,7 @@ void menuScreen() {
   fill(100);
   rect(width/2, height/1.5, 250, 100);
   fill(255);
-  text("Press Space to Begin", width/2, height/1.5);
+  text("Press Enter to Begin", width/2, height/1.5);
   textAlign(LEFT, LEFT);
   rectMode(CORNER);
   noFill();
