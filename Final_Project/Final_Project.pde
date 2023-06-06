@@ -7,9 +7,9 @@ final int totalNumLevels = 9;
 int currentLevelChoosing = 2; // this leads to level 1
 int rowChoosing = 0;
 int columnChoosing = 0;
-
-int spawnEveryXFrames = 20;
-int totalMoney = 2000;
+int ticks = 0;
+int spawnEveryXFrames;
+int totalMoney = 1000;
 PImage grass;
 PImage path;
 PImage spawner;
@@ -18,7 +18,7 @@ int boxPosZ = 0;
 int boxPosX = 0;
 int baseHealth = 100;
 boolean inBuildMode;
-int[] price = new int[] {100, 50};
+int[] price = new int[] {200, 500};
 int[] radii = new int[] {4, 3}; // damage radius for each tower
 int damage = 5;
 float fireRate = 5;
@@ -45,6 +45,8 @@ int levelNum = 0;
 
 int shiftX;
 int shiftY;
+
+
 
 
 void setup() {
@@ -92,6 +94,8 @@ void draw() {
       displayLevel();
       displayBuild();
       checkKey();
+      ticks++;
+      spawnEveryXFrames = 100000/(ticks+1);
     }
     else { // levels not part of game, menu and levelselect
       switch (levelNum) {
@@ -443,6 +447,7 @@ void keyPressed(){
         levelNum = currentLevelChoosing;
         currentLevel = new Level(levelNum);
         levelFinished = false;
+        ticks = 0;
       }
       else {
         currentLevel = new Level(++levelNum);
@@ -540,7 +545,7 @@ void updateEnemies() {
   if (inBuildMode) {
    return;
   }
-  if(frameCount % spawnEveryXFrames == 0){
+  if(ticks % (spawnEveryXFrames+1) == 0){
     if (temp) {
       spawnEnemy();
      // temp = false;
