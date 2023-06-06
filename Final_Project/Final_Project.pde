@@ -107,7 +107,15 @@ void draw() {
 
 void menuScreen() {
   // background
-  //background(japanBG);
+  if (width != 1600 && height != 900) {
+    pushMatrix();
+    translate(0,0,-1);
+    image(japanBG, 0, 0, width, height);
+    popMatrix();
+  }
+  else {
+    background(japanBG);
+  }
   //title
   textAlign(CENTER, CENTER);
   textSize(125);
@@ -130,8 +138,15 @@ void menuScreen() {
 }
 
 void levelSelect() {
-  background(0,0,0);
-  //make sure rows * columns gets u totalNumLevels
+  if (width != 1600 && height != 900) {
+    pushMatrix();
+    translate(0,0,-1);
+    image(japanBG, 0, 0, width, height);
+    popMatrix();
+  }
+  else {
+    background(japanBG);
+  }  //make sure rows * columns gets u totalNumLevels
   int rows = 3;
   int columns = 3;
   int rectSizeW = width/(2 * rows + 1);
@@ -179,7 +194,15 @@ void levelSelect() {
 
 void displayLevel(){
   lights();
-  background(77,70,170);
+  if (width != 1600 && height != 900) {
+    pushMatrix();
+    translate(0,0,-1);
+    image(japanBG, 0, 0, width, height);
+    popMatrix();
+  }
+  else {
+    background(japanBG);
+  }
   //background(sky);
   translate(width / 2, height / 2, zoomAmount);
   pushMatrix();            
