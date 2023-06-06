@@ -7,9 +7,10 @@ final int totalNumLevels = 9;
 int currentLevelChoosing = 2; // this leads to level 1
 int rowChoosing = 0;
 int columnChoosing = 0;
-int ticks = 0;
+int ticksRobot = 0;
+int ticksGoblin = 0;
 int spawnEveryXFrames;
-int totalMoney = 1000;
+int totalMoney = 1200;
 PImage grass;
 PImage path;
 PImage spawner;
@@ -24,6 +25,7 @@ int damage = 5;
 float fireRate = 5;
 int slowIntensity = 20;
 int health = 100;
+int goblinHealth = 200;
 int speedInverse = 10;
 ArrayList<PShape> towerModels;
 int towerModelsIndex;
@@ -94,8 +96,10 @@ void draw() {
       displayLevel();
       displayBuild();
       checkKey();
-      ticks++;
-      spawnEveryXFrames = 100000/(ticks+1);
+      ticksRobot++;
+      if(ticksRobot > 3000)
+        ticksGoblin++;
+      spawnEveryXFrames = 100000/(ticksRobot+1) + (int)(20*Math.random());
     }
     else { // levels not part of game, menu and levelselect
       switch (levelNum) {
@@ -197,6 +201,10 @@ void levelSelect() {
 }
 
 void displayLevel(){
+  if(baseHealth <= 0){
+    lose();
+    return;
+  }
   lights();
   if (width != 1600 && height != 900) {
     pushMatrix();
@@ -447,7 +455,7 @@ void keyPressed(){
         levelNum = currentLevelChoosing;
         currentLevel = new Level(levelNum);
         levelFinished = false;
-        ticks = 0;
+        ticksRobot = 0;
       }
       else {
         currentLevel = new Level(++levelNum);
@@ -545,9 +553,9 @@ void updateEnemies() {
   if (inBuildMode) {
    return;
   }
-  if(ticks % (spawnEveryXFrames+1) == 0){
+  if(ticksRobot % (spawnEveryXFrames+1) == 0){
     if (temp) {
-      spawnEnemy();
+      spawnEnemy(0);
      // temp = false;
     }
   }
@@ -555,8 +563,9 @@ void updateEnemies() {
     enemies.get(i).update();
   }
 }
-void spawnEnemy(){
-    enemies.add(new Enemy(0,0,health,speedInverse,levelNum));
+void spawnEnemy(int type){ //0 Robot 1 Goblin UNFINISHED
+    
+    enemies.add(new Robot(0,0,health,speedInverse,levelNum));
 }
 void spawnTower(int tilePosX, int tilePosY, String type) {
   switch (type) {
@@ -569,6 +578,14 @@ void spawnTower(int tilePosX, int tilePosY, String type) {
   }
 }
 
+void lose(){
+  enemies = new ArrayList<Enemy>();
+  currentLevel.tiles = null;
+  levelFinished = true;
+  baseHealth = 100;
+  totalMoney = 1200;
+  levelNum = 0;
+}
 void showAxes(){
   stroke(255,0,0);
   line(0,0,0,100,0,0);

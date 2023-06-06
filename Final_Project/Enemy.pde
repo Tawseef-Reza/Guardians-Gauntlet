@@ -16,6 +16,7 @@ class Enemy {
   PVector pathRightBefore;
   int direction;
   int tick = 0;
+  PShape model;
   boolean fixTheSpeed = false;
 
   Enemy(float x, float y, float health, float speed, int currentLevelNum) {
