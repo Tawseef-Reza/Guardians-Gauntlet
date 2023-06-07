@@ -17,7 +17,7 @@ PImage spawner;
 PImage japanBG;
 int boxPosZ = 0;
 int boxPosX = 0;
-int baseHealth = 100;
+int baseHealth = 30;
 boolean inBuildMode;
 int[] price = new int[] {200, 500};
 int[] radii = new int[] {4, 3}; // damage radius for each tower
@@ -128,7 +128,7 @@ void menuScreen() {
   textAlign(CENTER, CENTER);
   textSize(125);
   fill(255);
-  text("Guardians of the Gauntlet", width/2, height/2 - 100);
+  text("Guardians of the Gauntlet", width/2, height/2 - 400);
   
   //menu buttons
   textSize(24);
@@ -136,10 +136,10 @@ void menuScreen() {
   rectMode(CENTER);
   
   // Start Game
-  fill(100);
-  rect(width/2, height/1.5, 250, 100);
-  fill(255);
-  text("Press Enter to Begin", width/2, height/1.5);
+  fill(#4C83B3);
+  rect(width/2, height/1.5 - 200, 250, 100);
+  fill(200,0,0);
+  text("Press Enter to Begin", width/2, height/1.5 - 200);
   textAlign(LEFT, LEFT);
   rectMode(CORNER);
   noFill();
@@ -580,11 +580,15 @@ void spawnTower(int tilePosX, int tilePosY, String type) {
 
 void lose(){
   enemies = new ArrayList<Enemy>();
-  currentLevel.tiles = null;
-  levelFinished = true;
-  baseHealth = 100;
-  totalMoney = 1200;
+  towers = new ArrayList<Tower>();
   levelNum = 0;
+  currentLevel = new Level(levelNum);
+  //currentLevel.tiles = null;
+  
+  levelFinished = true;
+  baseHealth = 30;
+  totalMoney = 1200;
+  //levelNum = 0;
 }
 void showAxes(){
   stroke(255,0,0);

@@ -163,6 +163,7 @@ class Level{
   int initialMoney;
   
   public Level(int levelNumber){
+
     // level 1 refers to index 2
     int[][] level = levels[levelNumber];
     if (level != null) {
