@@ -13,7 +13,11 @@ int totalMoney = 2000;
 PImage grass;
 PImage path;
 PImage spawner;
-PImage japanBG;
+PImage[] menuBG;
+int menuBGframes = 50;
+int currentMenuFrame = 0;
+boolean reverseDisplayFrames = false;
+
 int boxPosZ = 0;
 int boxPosX = 0;
 int baseHealth = 100;
@@ -73,7 +77,10 @@ void setup() {
     path = loadImage("textures/path.png");
     tree = loadShape("models/tree/tree01.obj");
     spawner = loadImage("textures/spawner.jpg");
-    japanBG = loadImage("textures/japan.jpg");
+    menuBG = new PImage[menuBGframes];
+    for (int i = 0; i < menuBGframes; i++) {
+      menuBG[i] = loadImage("textures/backgroundArr/" + i + ".png");
+    }
    
     goblin = loadShape("models/goblin/Goblin.obj");
     robot = loadShape("models/robot/robot.obj");
@@ -106,8 +113,18 @@ void draw() {
 }
 
 void menuScreen() {
+  if (frameCount % 5 == 0) {
+    if (currentMenuFrame == menuBGframes - 1 && !reverseDisplayFrames) {
+      reverseDisplayFrames = true;
+    }
+    else if (currentMenuFrame == 0 && reverseDisplayFrames) {
+      reverseDisplayFrames = false;
+    }
+    currentMenuFrame += (reverseDisplayFrames ? -1 : 1);
+
+  }
   // background
-  //background(japanBG);
+  background(menuBG[currentMenuFrame]);
   //title
   textAlign(CENTER, CENTER);
   textSize(125);
