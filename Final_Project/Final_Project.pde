@@ -1018,13 +1018,15 @@ void reset(){
   baseHealth = 30;
   totalMoney = 1200;
   //levelNum = 0;
+  upgradeFirstSpawn = false;
+  upgradeSecondSpawn = false;
 }
-void showAxes(){
+void showAxes(){/*
   stroke(255,0,0);
   line(0,0,0,100,0,0);
   stroke(0,255,0);
   line(0,0,0,0,100,0);
     stroke(0,0,255);
-  line(0,0,0,0,0,100);
-  noStroke();
+  line(0,0,0,0,0,100);*/
+  stroke(0,0,0);
 }
