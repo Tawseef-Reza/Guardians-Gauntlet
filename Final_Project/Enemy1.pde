@@ -5,4 +5,15 @@ class Enemy1 extends Enemy{
     
     model = robot;
   }
+  
+  void takeDamage(float damage) {
+    // Reduce the enemy's health by the given damage amount
+    health -= damage;
+
+    // Check if the enemy has been defeated
+    if (health <= 0) {
+      defeat();
+      totalMoney += 10;
+    }
+  }
 }

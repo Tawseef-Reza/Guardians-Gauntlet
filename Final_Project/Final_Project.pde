@@ -21,6 +21,7 @@ PImage sand;
 PImage ice;
 PImage rock;
 
+int income = 10;
 
 PImage path;
 PImage spawner;
@@ -162,6 +163,7 @@ void setupExtend(){
 
 }
 void draw() {
+  
    if(setupDone){
      setupExtend();
    }
@@ -531,14 +533,15 @@ void progressLevel() {
   switch (levelNum) {
     case 2:
       // setting rate 
-      spawnEveryXFrames1 = 200000/(ticksEnemy1) + int(random(-10, 10));
+      if (ticksEnemy1 % 60 == 0) totalMoney+=income;
+      spawnEveryXFrames1 = 400000/(ticksEnemy1) + int(random(-10, 10));
       
       ticksEnemy1++;
       if (ticksEnemy1 > 3000) {
         if (!startSecondSpawn) {
           startSecondSpawn = true;
         }
-        spawnEveryXFrames2 = 200000/(ticksEnemy2);
+        spawnEveryXFrames2 = 400000/(ticksEnemy2);
         ticksEnemy2++;
       }
       
@@ -578,14 +581,15 @@ void progressLevel() {
       break;
     case 3:
 // setting rate 
-      spawnEveryXFrames1 = 200000/(ticksEnemy1) + int(random(-10, 10));
+      if (ticksEnemy1 % 60 == 0) totalMoney+=income;
+      spawnEveryXFrames1 = 400000/(ticksEnemy1) + int(random(-10, 10));
       
       ticksEnemy1++;
       if (ticksEnemy1 > 3000) {
         if (!startSecondSpawn) {
           startSecondSpawn = true;
         }
-        spawnEveryXFrames2 = 200000/(ticksEnemy2);
+        spawnEveryXFrames2 = 400000/(ticksEnemy2);
         ticksEnemy2++;
       }
       
@@ -624,15 +628,16 @@ void progressLevel() {
         levelFinished = true;
       break;
     case 4:
-// setting rate 
-      spawnEveryXFrames1 = 200000/(ticksEnemy1) + int(random(-10, 10));
+// setting rate
+      if (ticksEnemy1 % 60 == 0) totalMoney+=income;
+      spawnEveryXFrames1 = 400000/(ticksEnemy1) + int(random(-10, 10));
       
       ticksEnemy1++;
       if (ticksEnemy1 > 3000) {
         if (!startSecondSpawn) {
           startSecondSpawn = true;
         }
-        spawnEveryXFrames2 = 200000/(ticksEnemy2);
+        spawnEveryXFrames2 = 400000/(ticksEnemy2);
         ticksEnemy2++;
       }
       
@@ -672,14 +677,15 @@ void progressLevel() {
       break;
     case 5:
 // setting rate 
-      spawnEveryXFrames1 = 200000/(ticksEnemy1) + int(random(-10, 10));
+      if (ticksEnemy1 % 60 == 0) totalMoney+=income;
+      spawnEveryXFrames1 = 400000/(ticksEnemy1) + int(random(-10, 10));
       
       ticksEnemy1++;
       if (ticksEnemy1 > 3000) {
         if (!startSecondSpawn) {
           startSecondSpawn = true;
         }
-        spawnEveryXFrames2 = 200000/(ticksEnemy2);
+        spawnEveryXFrames2 = 400000/(ticksEnemy2);
         ticksEnemy2++;
       }
       
