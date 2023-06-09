@@ -25,7 +25,7 @@ PImage rock;
 PImage path;
 PImage spawner;
 
-int BGframes = 40;
+int BGframes = 30;
 // 7 for 4 levels
 //
 PImage[] menuBG;
@@ -37,7 +37,7 @@ PImage[] levels;
 
 int boxPosZ = 0;
 int boxPosX = 0;
-int baseHealth = 1;
+int baseHealth = 30;
 boolean inBuildMode;
 int[] price = new int[] {200, 500};
 int[] radii = new int[] {4, 3}; // damage radius for each tower
@@ -93,6 +93,10 @@ int levelNum = 0;
 int shiftX;
 int shiftY;
 
+boolean paused = false;
+
+boolean setupDone;
+
 void setup() {
 
     size(1600, 900, P3D);
@@ -119,7 +123,21 @@ void setup() {
     spawner = loadImage("textures/spawner.jpg");
     
     
-    menuBG = new PImage[BGframes];
+
+    
+
+    
+    
+    turret = loadShape("models/turret/turret.obj");
+    sword = loadShape("models/sword/sword.obj");
+    slow = loadShape("models/slow/slow.obj");
+    towerModels = new ArrayList<PShape>(List.of(turret, slow));
+    towerModelsIndex = 0;
+    setupDone = true;
+
+}
+void setupExtend(){
+      menuBG = new PImage[BGframes];
       for (int j = 0; j < BGframes; j++) {
         menuBG[j] = loadImage("textures/menuBackgroundArr/" + j + ".png");
       }
@@ -132,18 +150,22 @@ void setup() {
     robot = loadShape("models/robot/robot.obj");
     robotUpgrade1 = loadShape("models/level1/robotUpgrade/robot.obj");
     // add all definitions here, for all robot upgrades,
+    robotUpgrade2 = loadShape("models/level2/robotUpgrade/robot.obj");
+    robotUpgrade3 = loadShape("models/level3/robotUpgrade/robot.obj");
+    robotUpgrade4 = loadShape("models/level4/robotUpgrade/robot.obj");
     robot2 = loadShape("models/robot2/robot2.obj");
-    
-    
-    turret = loadShape("models/turret/turret.obj");
-    sword = loadShape("models/sword/sword.obj");
-    slow = loadShape("models/slow/slow.obj");
-    towerModels = new ArrayList<PShape>(List.of(turret, slow));
-    towerModelsIndex = 0;
+    robot2Upgrade1 = loadShape("models/level1/robot2Upgrade/robot2.obj");
+    robot2Upgrade2 = loadShape("models/level2/robot2Upgrade/robot2.obj");
+    robot2Upgrade3 = loadShape("models/level3/robot2Upgrade/robot2.obj");
+    robot2Upgrade4 = loadShape("models/level4/robot2Upgrade/robot2.obj");
+    setupDone = false;
 
 }
-
 void draw() {
+   if(setupDone){
+     setupExtend();
+   }
+     
 
     if (currentLevel.tiles != null) {
       displayLevel();
@@ -234,32 +256,30 @@ void levelSelect() {
   
   textAlign(CENTER, CENTER);
   textSize(60);
-  color[] colors = new color[] {
-        color(255, 0, 0),       // Red
-        color(255, 165, 0),     // Orange
-        color(255, 255, 0),     // Yellow
-        color(0, 255, 0),       // Green
-        color(0, 0, 255),       // Blue
-        color(75, 0, 130),      // Indigo
-        color(238, 130, 238),   // Violet
-        color(255, 105, 180),   // Pink
-        color(0, 255, 255)      // Cyan
-      };
+  color[] bgCol = new color[] {
+     color(75,50,0),
+     color(194,178,128),
+     color(165, 242, 243),
+     color(119,3,1)
+  };
+  color[] textColors = new color[] {
+     color(68, 165, 42),
+     color(44, 162, 49),
+     color(131,139,139),
+     color(185,45,45)
+   };
   for (int i = 0; i < columns; i++) {
     for (int j = 0; j < rows; j++) {
       int pos = j * columns + i;
       //text(pos, (((2 * i + 1) * rectSizeW) + ((2 * i + 1) * rectSizeW + rectSizeW))/2, (((2 * j + 1) * rectSizeH) + ((2 * j + 1) * rectSizeH + rectSizeH))/2);
-      fill(colors[pos]);
+      fill(bgCol[pos]);
       // Calculate RGB values based on position
       if (currentLevelChoosing-2 == pos) {
         stroke(255,255,255);
         strokeWeight(10);
       }
       rect((2 * i + 1) * rectSizeW, (2 * j + 1) * rectSizeH, rectSizeW, rectSizeH, 4);
-      if (pos + 1 == 9) 
-        fill(colors[0]);
-      else 
-        fill(colors[pos+1]);
+      fill(textColors[pos]);
       
       text(pos, (((2 * i + 1) * rectSizeW) + ((2 * i + 1) * rectSizeW + rectSizeW))/2, (((2 * j + 1) * rectSizeH) + ((2 * j + 1) * rectSizeH + rectSizeH))/2);
       noStroke();
@@ -319,12 +339,15 @@ void displayLevel(){
     
     if (!levelFinished) {
       populateLevel();
+      if(!paused){
       progressLevel();
       updateEnemies();
       updateTowers();
+      }
       displayEnemies();
       showAxes();
       displayTowers();
+      
     }
 
     
@@ -332,7 +355,7 @@ void displayLevel(){
     popMatrix();
     pushMatrix();
     translate(-width/2,-height/2,-zoomAmount);
-    if(inBuildMode)
+    if(paused)
       fill(0,255,0);
     else
       fill(255,0,0);
@@ -357,7 +380,7 @@ void displayLevel(){
       }
       else {
         fill(211,49,49);
-        text("You Lost. :(", width/2, height/2 - 200);
+        text("DEFEAT!", width/2, height/2 - 200);
         text("Press Enter to go back to the Main Menu", width/2, height/2);
       }
       noFill();
@@ -508,21 +531,21 @@ void progressLevel() {
   switch (levelNum) {
     case 2:
       // setting rate 
-      spawnEveryXFrames1 = 100000/(ticksEnemy1) + int(random(-10, 10));
+      spawnEveryXFrames1 = 200000/(ticksEnemy1) + int(random(-10, 10));
       
       ticksEnemy1++;
       if (ticksEnemy1 > 3000) {
         if (!startSecondSpawn) {
           startSecondSpawn = true;
         }
-        spawnEveryXFrames2 = 100000/(ticksEnemy2);
+        spawnEveryXFrames2 = 200000/(ticksEnemy2);
         ticksEnemy2++;
       }
       
-      if (ticksEnemy1 > 100) {
+      if (ticksEnemy1 > 5000) {
          upgradeFirstSpawn = true;
       }
-      if (ticksEnemy2 > 100) {
+      if (ticksEnemy2 > 5000) {
         upgradeSecondSpawn = true;
       }
       spawnEveryXFrames1 = spawnEveryXFrames1 <= 0 ? 1 : spawnEveryXFrames1;
@@ -550,26 +573,26 @@ void progressLevel() {
       
       
       
-    if (ticksEnemy1 == 10000) 
+    if (ticksEnemy1 == 50000) 
         levelFinished = true;
       break;
     case 3:
-      // setting rate 
-      spawnEveryXFrames1 = 100000/(ticksEnemy1) + int(random(-10, 10));
+// setting rate 
+      spawnEveryXFrames1 = 200000/(ticksEnemy1) + int(random(-10, 10));
       
       ticksEnemy1++;
       if (ticksEnemy1 > 3000) {
         if (!startSecondSpawn) {
           startSecondSpawn = true;
         }
-        spawnEveryXFrames2 = 100000/(ticksEnemy2);
+        spawnEveryXFrames2 = 200000/(ticksEnemy2);
         ticksEnemy2++;
       }
       
-      if (ticksEnemy1 > 100) {
+      if (ticksEnemy1 > 5000) {
          upgradeFirstSpawn = true;
       }
-      if (ticksEnemy2 > 100) {
+      if (ticksEnemy2 > 5000) {
         upgradeSecondSpawn = true;
       }
       spawnEveryXFrames1 = spawnEveryXFrames1 <= 0 ? 1 : spawnEveryXFrames1;
@@ -597,26 +620,26 @@ void progressLevel() {
       
       
       
-    if (ticksEnemy1 == 10000) 
+    if (ticksEnemy1 == 50000) 
         levelFinished = true;
       break;
     case 4:
-      // setting rate 
-      spawnEveryXFrames1 = 100000/(ticksEnemy1) + int(random(-10, 10));
+// setting rate 
+      spawnEveryXFrames1 = 200000/(ticksEnemy1) + int(random(-10, 10));
       
       ticksEnemy1++;
       if (ticksEnemy1 > 3000) {
         if (!startSecondSpawn) {
           startSecondSpawn = true;
         }
-        spawnEveryXFrames2 = 100000/(ticksEnemy2);
+        spawnEveryXFrames2 = 200000/(ticksEnemy2);
         ticksEnemy2++;
       }
       
-      if (ticksEnemy1 > 100) {
+      if (ticksEnemy1 > 5000) {
          upgradeFirstSpawn = true;
       }
-      if (ticksEnemy2 > 100) {
+      if (ticksEnemy2 > 5000) {
         upgradeSecondSpawn = true;
       }
       spawnEveryXFrames1 = spawnEveryXFrames1 <= 0 ? 1 : spawnEveryXFrames1;
@@ -644,26 +667,26 @@ void progressLevel() {
       
       
       
-    if (ticksEnemy1 == 10000) 
+    if (ticksEnemy1 == 50000) 
         levelFinished = true;
       break;
     case 5:
-      // setting rate 
-      spawnEveryXFrames1 = 100000/(ticksEnemy1) + int(random(-10, 10));
+// setting rate 
+      spawnEveryXFrames1 = 200000/(ticksEnemy1) + int(random(-10, 10));
       
       ticksEnemy1++;
       if (ticksEnemy1 > 3000) {
         if (!startSecondSpawn) {
           startSecondSpawn = true;
         }
-        spawnEveryXFrames2 = 100000/(ticksEnemy2);
+        spawnEveryXFrames2 = 200000/(ticksEnemy2);
         ticksEnemy2++;
       }
       
-      if (ticksEnemy1 > 100) {
+      if (ticksEnemy1 > 5000) {
          upgradeFirstSpawn = true;
       }
-      if (ticksEnemy2 > 100) {
+      if (ticksEnemy2 > 5000) {
         upgradeSecondSpawn = true;
       }
       spawnEveryXFrames1 = spawnEveryXFrames1 <= 0 ? 1 : spawnEveryXFrames1;
@@ -691,14 +714,14 @@ void progressLevel() {
       
       
       
-    if (ticksEnemy1 == 10000) 
+    if (ticksEnemy1 == 50000) 
         levelFinished = true;
       break;
   }
 }
 
 void displayBuild() {  
-  if(inBuildMode){  
+  if(inBuildMode && !levelFinished){  
     translate(0, 0);
     pushMatrix();
     rotateX(isoThetaX);
@@ -756,7 +779,7 @@ void checkKey() {
 void mousePressed(){
   if (currentLevel.tiles != null) {
     if(mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 50){
-      inBuildMode = !inBuildMode;
+      paused = !paused;
     }
   }
   
@@ -767,6 +790,7 @@ void mousePressed(){
 
 void keyPressed(){
   if (currentLevel.tiles != null) {
+    
         if (key == 'z'){
           zoomAmount += 100;          
         }
@@ -778,7 +802,10 @@ void keyPressed(){
           
           reset();
         }
-         else if(inBuildMode){
+        else if(key == 'b'){
+          inBuildMode = !inBuildMode;
+        }
+         else if(inBuildMode && !paused){
             if(key == CODED){
               if(keyCode == UP && boxPosX < 0){
              
@@ -857,6 +884,7 @@ void keyPressed(){
     }
     
   }
+  
          
 
 }
@@ -987,7 +1015,7 @@ void reset(){
   levelFinished = true; // since we are returning to hte menu screen, it should be automatically back to true 
   startSecondSpawn = false;
 
-  baseHealth = 1;
+  baseHealth = 30;
   totalMoney = 1200;
   //levelNum = 0;
 }

@@ -5,16 +5,16 @@ class Enemy4 extends Enemy{
     
     switch (currentLevelNum) {
       case 2:
-        model = robotUpgrade1;
+        model = robot2Upgrade1;
         break;
       case 3:
-        model = robotUpgrade2;
+        model = robot2Upgrade2;
         break;
       case 4:
-        model = robotUpgrade3;
+        model = robot2Upgrade3;
         break;
       case 5:
-        model = robotUpgrade4;
+        model = robot2Upgrade4;
         break;
     }  
   }
