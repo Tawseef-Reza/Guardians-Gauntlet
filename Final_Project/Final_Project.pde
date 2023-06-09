@@ -46,11 +46,11 @@ int damage = 5;
 float fireRate = 5;
 int slowIntensity = 20;
 
-int health1 = 100;
-int upgradeHealth = 200;
+float health1 = 100;
+float upgradeHealth = 200;
 
-int health2 = 50;
-int upgradeHealth2 = 100;
+float health2 = 50;
+float upgradeHealth2 = 200;
 
 int speedInverse1 = 20;
 int upgradeSpeed = 10;
@@ -551,9 +551,18 @@ void progressLevel() {
       if (ticksEnemy2 > 5000) {
         upgradeSecondSpawn = true;
       }
+      
+      if (ticksEnemy1 > 10000 && ticksEnemy1 % 60 == 0) {
+        health1 *= 1.05;
+        upgradeHealth *= 1.05;
+        health2 *= 1.05;
+        upgradeHealth2 *= 1.05;
+      }
+      
       spawnEveryXFrames1 = spawnEveryXFrames1 <= 0 ? 1 : spawnEveryXFrames1;
       spawnEveryXFrames2 = spawnEveryXFrames2 <= 0 ? 1 : spawnEveryXFrames2;
 //---------------------
+    if (ticksEnemy1 <= 19000) {
       if (ticksEnemy1 % spawnEveryXFrames1 == 0) {
         if (upgradeFirstSpawn) {
           spawnEnemy(2);
@@ -573,10 +582,10 @@ void progressLevel() {
           } 
         }
       }
+    }
       
       
-      
-    if (ticksEnemy1 == 50000) 
+    if (ticksEnemy1 == 20000) 
         levelFinished = true;
       break;
     case 3:
@@ -599,9 +608,18 @@ void progressLevel() {
       if (ticksEnemy2 > 5000) {
         upgradeSecondSpawn = true;
       }
+      
+      if (ticksEnemy1 > 10000 && ticksEnemy1 % 60 == 0) {
+        health1 *= 1.05;
+        upgradeHealth *= 1.05;
+        health2 *= 1.05;
+        upgradeHealth2 *= 1.05;
+      }
+      
       spawnEveryXFrames1 = spawnEveryXFrames1 <= 0 ? 1 : spawnEveryXFrames1;
       spawnEveryXFrames2 = spawnEveryXFrames2 <= 0 ? 1 : spawnEveryXFrames2;
 //---------------------
+    if (ticksEnemy1 <= 19000) {
       if (ticksEnemy1 % spawnEveryXFrames1 == 0) {
         if (upgradeFirstSpawn) {
           spawnEnemy(2);
@@ -621,14 +639,14 @@ void progressLevel() {
           } 
         }
       }
+    }
       
       
-      
-    if (ticksEnemy1 == 50000) 
+    if (ticksEnemy1 == 20000) 
         levelFinished = true;
       break;
     case 4:
-// setting rate
+// setting rate 
       if (ticksEnemy1 % 60 == 0) totalMoney+=income;
       spawnEveryXFrames1 = 400000/(ticksEnemy1) + int(random(-10, 10));
       
@@ -647,9 +665,18 @@ void progressLevel() {
       if (ticksEnemy2 > 5000) {
         upgradeSecondSpawn = true;
       }
+      
+      if (ticksEnemy1 > 10000 && ticksEnemy1 % 60 == 0) {
+        health1 *= 1.05;
+        upgradeHealth *= 1.05;
+        health2 *= 1.05;
+        upgradeHealth2 *= 1.05;
+      }
+      
       spawnEveryXFrames1 = spawnEveryXFrames1 <= 0 ? 1 : spawnEveryXFrames1;
       spawnEveryXFrames2 = spawnEveryXFrames2 <= 0 ? 1 : spawnEveryXFrames2;
 //---------------------
+    if (ticksEnemy1 <= 19000) {
       if (ticksEnemy1 % spawnEveryXFrames1 == 0) {
         if (upgradeFirstSpawn) {
           spawnEnemy(2);
@@ -669,10 +696,10 @@ void progressLevel() {
           } 
         }
       }
+    }
       
       
-      
-    if (ticksEnemy1 == 50000) 
+    if (ticksEnemy1 == 20000) 
         levelFinished = true;
       break;
     case 5:
@@ -695,9 +722,18 @@ void progressLevel() {
       if (ticksEnemy2 > 5000) {
         upgradeSecondSpawn = true;
       }
+      
+      if (ticksEnemy1 > 10000 && ticksEnemy1 % 60 == 0) {
+        health1 *= 1.05;
+        upgradeHealth *= 1.05;
+        health2 *= 1.05;
+        upgradeHealth2 *= 1.05;
+      }
+      
       spawnEveryXFrames1 = spawnEveryXFrames1 <= 0 ? 1 : spawnEveryXFrames1;
       spawnEveryXFrames2 = spawnEveryXFrames2 <= 0 ? 1 : spawnEveryXFrames2;
 //---------------------
+    if (ticksEnemy1 <= 19000) {
       if (ticksEnemy1 % spawnEveryXFrames1 == 0) {
         if (upgradeFirstSpawn) {
           spawnEnemy(2);
@@ -717,10 +753,10 @@ void progressLevel() {
           } 
         }
       }
+    }
       
       
-      
-    if (ticksEnemy1 == 50000) 
+    if (ticksEnemy1 == 20000) 
         levelFinished = true;
       break;
   }
@@ -1012,6 +1048,12 @@ void reset(){
   shiftY = 0;
   ticksEnemy1 = 1;
   ticksEnemy2 = 1;
+
+  health1 = 100;
+  upgradeHealth = 200;
+  health2 = 50;
+  upgradeHealth2 = 200;
+ 
   enemies = new ArrayList<Enemy>();
   towers = new ArrayList<Tower>();
   levelNum = 0;
