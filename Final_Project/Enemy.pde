@@ -4,7 +4,7 @@ import java.util.List;
 List<Enemy> enemies = new ArrayList<Enemy>(); // List to hold the enemies
 
 class Enemy {
-  int slowAmt = 0;
+  float slowAmt = 0;
   PVector position; // Position of the enemy
   PVector interPos;
   float health; // Health of the enemy
@@ -16,6 +16,7 @@ class Enemy {
   PVector pathRightBefore;
   int direction;
   int tick = 0;
+  PShape model;
   boolean fixTheSpeed = false;
 
   Enemy(float x, float y, float health, float speed, int currentLevelNum) {
@@ -41,8 +42,7 @@ class Enemy {
   }
 
   void update() {
-    println(speed);
-    println(slowAmt);
+
     // Move the enemy towards the target (e.g., the player's base)
     if (tick % speed == 0)
       move();

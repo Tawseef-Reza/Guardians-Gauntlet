@@ -4,6 +4,7 @@ import java.util.List;
 class SlowTower extends Tower {
   float slowIntensity;
   ArrayList<Enemy> targets;
+  boolean isDeleted = false;
   //boolean multiple;
   public SlowTower(int tilePosX, int tilePosY, float range, float slowIntensity) {
       type = "SlowTower";
@@ -43,12 +44,14 @@ class SlowTower extends Tower {
     newTargets.removeAll(targets);
     for (Enemy newTarget : newTargets) {
       newTarget.slowAmt += slowIntensity;
+      newTarget.slowAmt = constrain(newTarget.slowAmt, 0.0, slowIntensity);
       newTarget.fixTheSpeed = true;
     }
       
     targets.removeAll(allTargets);
     for (Enemy target : targets) {
       target.slowAmt -= slowIntensity;
+      target.slowAmt = constrain(target.slowAmt, 0.0, slowIntensity);
       target.fixTheSpeed = true;
     }
     targets = allTargets;
@@ -56,6 +59,12 @@ class SlowTower extends Tower {
   
   void delete(){
     towers.remove(this);
+    for (Enemy target : targets) {
+      target.slowAmt -= slowIntensity;
+      target.slowAmt = constrain(target.slowAmt, 0.0, slowIntensity);
+      target.fixTheSpeed = true;
+    }
+    targets = new ArrayList<Enemy>();
     totalMoney += price[1] / 2;
   }
 }
